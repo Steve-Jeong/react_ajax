@@ -1,26 +1,10 @@
 import React, {Component} from 'react'; 
 
 class Nav extends Component { 
-  state = { 
-    list : []
-  }
-
-  componentDidMount() {
-    fetch('list.json')
-      .then(function(result) {
-        console.log('result : ', result)
-        return result.json();
-      })
-      .then(function(json) {
-        console.log('json : ',json)
-        this.setState({list:json})
-      }.bind(this))
-  }
-
   render() {
     var listTag = []
-    for(let i=0; i < this.state.list.length; i++) {
-      let li=this.state.list[i]
+    for(let i=0; i < this.props.list.length; i++) {
+      let li=this.props.list[i]
       listTag.push(
         <li key={li.id}>
           <a href={li.id} onClick={function(id, e) {
@@ -55,13 +39,28 @@ class App extends Component {
   state = {
     article:
       {title:'Welcome', desc:'Hello, React & Ajax'},
-    selected_id : 0
+    selected_id : 0,
+    list:[]
   }
+
+  
+  componentDidMount() {
+    fetch('list.json')
+      .then(function(result) {
+        // console.log('result : ', result)
+        return result.json();
+      })
+      .then(function(json) {
+        // console.log('json : ',json)
+        this.setState({list:json})
+      }.bind(this))
+  }
+
   render() {
     return (
       <div className="App">
         <h1>WEB</h1>
-        <Nav onClick={function(id) {
+        <Nav list={this.state.list} onClick={function(id) {
           this.setState({selected_id:id})
           fetch(id+'.json')
             .then(function(result){
