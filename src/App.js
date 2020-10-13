@@ -53,12 +53,8 @@ class Article extends Component {
 
 class App extends Component {
   state = {
-    article:[
+    article:
       {title:'Welcome', desc:'Hello, React & Ajax'},
-      {title:'HTML', desc:'HTML is ...'},
-      {title:'CSS', desc:'CSS is ...'},
-      {title:'JavaScript', desc:'JavaScript is ...'}
-    ],
     selected_id : 0
   }
   render() {
@@ -66,12 +62,21 @@ class App extends Component {
       <div className="App">
         <h1>WEB</h1>
         <Nav onClick={function(id) {
-          console.log('id', id)
           this.setState({selected_id:id})
-          console.log('this.state.selected_id :', this.state.selected_id)
+          fetch(id+'.json')
+            .then(function(result){
+              return result.json()
+            })
+            .then(function(json){
+              this.setState({
+                article:{
+                  title:json.title,
+                  desc:json.desc
+                }
+              })
+            }.bind(this))
         }.bind(this)}></Nav>
-        <Article title={this.state.article[this.state.selected_id].title} desc={this.state.article[this.state.selected_id].desc}></Article>
-        {/* <Article title={this.state.selected_id} desc={this.state.selected_id}></Article> */}
+        <Article title={this.state.article.title} desc={this.state.article.desc}></Article>
       </div>
     )
   }
